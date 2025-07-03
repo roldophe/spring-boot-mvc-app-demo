@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-3">
+        <div class="card text-center">
+            <div class="card-body bg-light">
+                <div class="row">
+                    <div class="col-6 d-flex align-items-start">
+                        <form th:action="@{/companies}" method="get" class="d-flex align-items-center gap-2">
+                            <label class="form-label mb-0">Search :</label>
+                            <label>
+                                <input type="text" name="keyword" th:value="${keyword}"
+                                       placeholder="by company name" class="form-control form-control-sm">
+                            </label>
+                            <button type="submit" class="btn btn-sm color-deep-sea-green text-white panel-btn mb-0"
+                                    title="Search">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <a class="btn btn-sm color-deep-sea-green text-white panel-btn" 
+                       th:href="@{/companies/new}" title="Add New Company">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </a>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-sm border">
+                <thead>
+                <tr class="table text-white table-success h6">
+                    <th class="border color-deep-sea-green scale-default"></th>
+                    <th>Company</th>
+                    <th>Email</th>
+                    <th>Sector</th>
+                    <th>Description</th>
+                    <th class="border">Action</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr th:each="company:${companyList}">
+                    <td class="border-end bg-light bg-gradient">
+                        <a class="btn btn-outline-dark btn-sm border-0"
+                           th:href="@{/companies/{id}(id=${company.id})}" title="View Details">
+                            <i class="bi bi-eye-fill"></i></a>
+                    </td>
+                    <td th:text="${company.name}"></td>
+                    <td th:text="${company.email}"></td>
+                    <td th:text="${company.sector != null ? #strings.capitalize(company.sector.toString().replace('_',' ')) : 'N/A'}"></td>
+                    <td th:text="${company.description}"></td>
+                    <td class="bg-white border border-start">
+                        <a class="btn btn-outline-success btn-sm border-0 ms-1"
+                           th:href="@{/companies/{id}/edit(id=${company.id},keyword=${keyword})}"
+                           title="Edit Company">
+                            <i class="bi bi-pencil-fill"></i></a>
+                        <a class="btn btn-outline-danger btn-sm border-0"
+                           th:href="@{/companies/{id}/delete(id=${company.id})}"
+                           onclick="return confirm('Are you sure you want to delete this company?')"
+                           title="Delete Company">
+                            <i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${#lists.isEmpty(companyList)}" class="alert alert-info">
+                <p>No companies found.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
